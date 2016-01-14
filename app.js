@@ -13,15 +13,8 @@ app.use(express.static(path.join(__dirname, 'public'))); // for static files loo
 // set the port
 app.set('port', process.env.PORT || 3000);
 
-// use the router middleware
-var router = express.Router();
-
-router.get('/', function(req, res, next){
-	res.render('index', {});
-});
-
-// mount the router on the app, i.e, whenever the request comes, use router.
-app.use('/', router);
+// for routes, routes are moved into seperate routes folder
+require('./routes/routes.js')(express, app);
 
 // configure socket.io for express framework
 var server = require('http').Server(app);
