@@ -1,5 +1,7 @@
 var express = require('express'), 
-	path  = require('path');
+	path  = require('path'),
+	// bring the config file from config folder using config.js file
+	config = require('./config/config.js');
 	
 	
 var app = express();
@@ -7,6 +9,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views')); // name and path to the folder which stores the views, i.e .html files
 app.engine('html', require('hogan-express')); // express should render html files and the method to use to render pages is hogan-express module
 app.set('view engine', 'html'); // file extension for templates is html
+app.set('host', config.host); // used for config, use development or production config based on the environment variables
 
 app.use(express.static(path.join(__dirname, 'public'))); // for static files look in the public folder
 
