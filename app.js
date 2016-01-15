@@ -1,7 +1,9 @@
 var express = require('express'), 
 	path  = require('path'),
 	// bring the config file from config folder using config.js file
-	config = require('./config/config.js');
+	config = require('./config/config.js'),
+	// set up for knox( a s3 client for node)
+	knox = require('knox');
 	
 	
 var app = express();
@@ -15,6 +17,15 @@ app.use(express.static(path.join(__dirname, 'public'))); // for static files loo
 
 // set the port
 app.set('port', process.env.PORT || 3000);
+
+// configure app for using knox client
+var knoxclient = knox.createClient(
+	{
+		key: config.S3AccessKey,
+		secret: config.S3SecretKey,
+		bucket: config.S3BucketName
+	}
+)
 
 // for routes, routes are moved into seperate routes folder
 require('./routes/routes.js')(express, app);
