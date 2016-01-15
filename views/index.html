@@ -7,6 +7,49 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css">
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 	<script src="/js/photogrid_utils.js"></script>
+	<script>
+		var host = '{{host}}';
+		
+		$('document').on('click', '#doUpload', function(){
+			uploadNow();
+		});
+		
+		function uploadNow(){
+			// to create animation effect
+			$('.progress').fadeIn(100);
+			var uploadURL = host + '/upload';
+			var uploadFile = $('.uploadPic');
+			if(uploadFile.val() != '') {
+				// create a new form to programatically submit using ajax call
+				var formData = new FormData();
+				// formData is a dictionary,so create a key called 'upload' and value as the uploaded file
+				formData.append('upload', uploadFile[0].files[0]);
+				// perform the ajax post request to submit
+				ajax({
+					method: 'post',
+					url: uploadURL,
+					success: function(e){
+						// upon completion of the upload, provide fade out animation
+						$('.progress').fadeOut(200);
+						// the upload button should be emptied out
+						uploadFile.val('');
+					},
+					// function which is responsible for getting how many bytes are transferred
+					progress: function(e) {
+						// if server is actively providing the progress of the upload
+						if(e.lengthComputable) {
+							// e.loaded is the amount actually transferred, e.total is the total payload
+							var perc = Math.round((e.loaded * 100) / e.total);
+							// change the width of progress div, to display the progress
+							$('.progress').css('width', (perc + '%'));
+						}
+						
+					},
+					payload: formData
+				})
+			}
+		}
+	</script>
 
 
 </head>
