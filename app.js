@@ -3,7 +3,10 @@ var express = require('express'),
 	// bring the config file from config folder using config.js file
 	config = require('./config/config.js'),
 	// set up for knox( a s3 client for node)
-	knox = require('knox');
+	knox = require('knox'),
+	fs = require('fs'),
+	os = require('os'),
+	formidable = require('formidable');
 	
 	
 var app = express();
@@ -28,7 +31,7 @@ var knoxclient = knox.createClient(
 )
 
 // for routes, routes are moved into seperate routes folder
-require('./routes/routes.js')(express, app);
+require('./routes/routes.js')(express, app, formidable, fs, os);
 
 // configure socket.io for express framework
 var server = require('http').Server(app);
