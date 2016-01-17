@@ -7,7 +7,8 @@ var express = require('express'),
 	fs = require('fs'),
 	os = require('os'),
 	formidable = require('formidable'),
-	gm = require('gm'); // graphics magick module to resize images
+	gm = require('gm'), // graphics magick module to resize images
+	mongoose = require('mongoose').connect(config.dbURL);
 	
 	
 var app = express();
@@ -31,12 +32,14 @@ var knoxclient = knox.createClient(
 	}
 )
 
-// for routes, routes are moved into seperate routes folder
-require('./routes/routes.js')(express, app, formidable, fs, os, gm, knoxclient);
-
 // configure socket.io for express framework
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+
+
+// for routes, routes are moved into seperate routes folder
+require('./routes/routes.js')(express, app, formidable, fs, os, gm, knoxclient, mongoose, io);
+
 
 
 //use server instead of app, as server wraps app around it. So use .listen method on the 'server' variable
