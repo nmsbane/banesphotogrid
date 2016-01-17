@@ -1,4 +1,4 @@
-module.exports = function(express, app, formidable, fs, os, gm){
+module.exports = function(express, app, formidable, fs, os, gm, knoxclient){
 	// use the router middleware
 	var router = express.Router();
 	
@@ -46,6 +46,24 @@ module.exports = function(express, app, formidable, fs, os, gm){
 				// resize it to 450px and write it to the location pointed at nFile
 				gm(nFile).resize(450).write(nFile, function(){
 					// upload the overwritten file to s3
+					// read the file 
+					fs.readFile(nFile, function(err, buf){
+						var req = knoxclient.put(fname, {
+							'Content-Length': buf.length,
+							'Content-Type': 'image/jpeg'
+						});
+						
+						// listen for response event on 'req' 
+						req.on('response', function(res){
+							// if file is successfully put on the s3 bucket
+							if(res.statusCode == 200) {
+								
+							}
+						});
+						
+						// end the request
+						req.end(buf);
+					});
 				});
 			});
 		});

@@ -32,7 +32,7 @@ var knoxclient = knox.createClient(
 )
 
 // for routes, routes are moved into seperate routes folder
-require('./routes/routes.js')(express, app, formidable, fs, os, gm);
+require('./routes/routes.js')(express, app, formidable, fs, os, gm, knoxclient);
 
 // configure socket.io for express framework
 var server = require('http').Server(app);
