@@ -6,7 +6,8 @@ var express = require('express'),
 	knox = require('knox'),
 	fs = require('fs'),
 	os = require('os'),
-	formidable = require('formidable');
+	formidable = require('formidable'),
+	gm = require('gm'); // graphics magick module to resize images
 	
 	
 var app = express();
@@ -31,7 +32,7 @@ var knoxclient = knox.createClient(
 )
 
 // for routes, routes are moved into seperate routes folder
-require('./routes/routes.js')(express, app, formidable, fs, os);
+require('./routes/routes.js')(express, app, formidable, fs, os, gm);
 
 // configure socket.io for express framework
 var server = require('http').Server(app);

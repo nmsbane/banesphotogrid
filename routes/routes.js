@@ -1,4 +1,4 @@
-module.exports = function(express, app, formidable, fs, os){
+module.exports = function(express, app, formidable, fs, os, gm){
 	// use the router middleware
 	var router = express.Router();
 	
@@ -43,6 +43,10 @@ module.exports = function(express, app, formidable, fs, os){
 		form.on('end', function(){
 			fs.rename(tmpFile, nFile, function(){
 				// resize the image and upload the file into the s3 bucket
+				// resize it to 450px and write it to the location pointed at nFile
+				gm(nFile).resize(450).write(nFile, function(){
+					// upload the overwritten file to s3
+				});
 			});
 		});
 	})
