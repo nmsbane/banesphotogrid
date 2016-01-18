@@ -64,7 +64,7 @@ module.exports = function(express, app, formidable, fs, os, gm, knoxclient, mong
 					// upload the overwritten file to s3
 					// read the file 
 					fs.readFile(nFile, function(err, buf){
-						var req = knoxclient.put(fname, {
+						var req = knoxclient.put(fName, {
 							'Content-Length': buf.length,
 							'Content-Type': 'image/jpeg'
 						});
@@ -75,7 +75,7 @@ module.exports = function(express, app, formidable, fs, os, gm, knoxclient, mong
 							if(res.statusCode == 200) {
 								// store the filename and the number of votes on mongodb
 								var newImage = new singleImageModel({
-									filename: fname,
+									filename: fName,
 									votes: 0
 								}).save();
 								// notify the frontend about the save on the s3 bucket, using the 'Socket' variable which is declared at the top
@@ -85,7 +85,7 @@ module.exports = function(express, app, formidable, fs, os, gm, knoxclient, mong
 								Socket.emit('doUpdate', {});
 								
 								// delete the local file
-								fs.unlink(nfile, function(){
+								fs.unlink(nFile, function(){
 									console.log("Local file is deleted");
 								});
 								
@@ -99,6 +99,16 @@ module.exports = function(express, app, formidable, fs, os, gm, knoxclient, mong
 			});
 		});
 	})
+	
+	// query mongodb to get all the images from the database
+	router.get('/getimages', function(req, res, next) {
+		// query the mongodb to get all the images, and send the result as the json response
+		singleImageModel.find({}, function(err, result) {
+			// result contains all the entries from the db, so turn it into json and send
+			res.send(JSON.stringify(result));
+			
+		})
+	});
 	
 	// mount the router on the app, i.e, whenever the request comes, use router.
 	app.use('/', router);

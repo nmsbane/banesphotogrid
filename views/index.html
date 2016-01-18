@@ -11,8 +11,10 @@
 	<script>
 		var host = '{{host}}';
 		
-		$('document').on('click', '#doUpload', function(){
-			uploadNow();
+		$(document).ready( function() {
+			$('#doUpload').click(function(){
+				uploadNow();
+			});
 		});
 		
 		var socket = io(host);
@@ -22,8 +24,44 @@
 		});
 		
 		socket.on('doUpdate', function(){
-			renderList(); // loads all images from the s3 bucket and re render the html file
-		})
+			renderList(); // loads all images from the s3 bucket and re-render the html file
+		});
+		
+		// function to render the images 
+		function renderList(){
+			// remove unordered list to re render the page
+			$('.gallery ul').html('');
+			// call /getimages route using ajax call
+			ajax({
+				url: host + '/getimages',
+				success: function(data) {
+					// data contains the result, and we are converting it into an array
+					var imageList = JSON.parse(data.response);
+					for(var i = 0; i < imageList.length; i++) {
+					var str	= '<li>';
+						str += 	'<div class="overlay">';
+						str += 	'<div class="voteCtrl">';
+						str +=	'<a href="#" class="voteUp" data-photoid=' + imageList[i]._id  +'>';
+						str += 	'<img src="/images/voteup.png" alt="Click Here to Vote Up !">';
+						str +=	'<h4>' + imageList[i].votes + '</h4>';
+						str +=	'</a>';
+						str +=	'</div>';
+						str +=	'</div>';
+						str +=	'<div class="thumbnail">';
+						str += 	'<img src="https://s3-ap-southeast-1.amazonaws.com/banesphotogrid/' + imageList[i].filename + '"alt="">';
+						str += 	'</div>';
+						str +=  '</li>';
+					
+					// append the template to the ul element of gallery class
+					$('.gallery ul').append(str);		
+					}
+				}
+				
+			})
+		}
+		
+		// to load all imagess when the user requests for homepage
+		renderList();
 		
 		function uploadNow(){
 			// to create animation effect
@@ -82,7 +120,8 @@
 		<div class="gallery">
 			<ul>
 				<!-- Repeat the following <li> structure for every image -->
-				 <li>
+				 <!-- 
+					 <li>
 					<div class="overlay">
 					<div class="voteCtrl">
 						<a href="#" class="voteUp">
@@ -96,7 +135,7 @@
 					</div>
 				</li>
 				<!-- End Repeat -->
-
+                -->
 
 			</ul>
 		</div>
