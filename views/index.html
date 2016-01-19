@@ -63,6 +63,20 @@
 		// to load all imagess when the user requests for homepage
 		renderList();
 		
+		// listen for click event on an element of class voteUp.
+		$(document).on('click', '.voteUp', function(e){
+			// $(this) points to the image, where the user has clicked, we assign that = $(this), because inside the ajax call, $(this) points to different element
+			var that = $(this);
+			ajax({
+				url: host + '/voteup/' + that.data('photoid'), // access the data attribute photoid
+				success: function(data) {
+					// data variable contains the new number of upvoted votes, which is in the form of string
+					var parseData = JSON.parse(data.response);
+					that.find('h4').html(parseData.votes); // change the h4 element of the clicked image
+				}
+			})
+		});
+		
 		function uploadNow(){
 			// to create animation effect
 			$('.progress').fadeIn(100);

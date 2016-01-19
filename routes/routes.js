@@ -103,11 +103,23 @@ module.exports = function(express, app, formidable, fs, os, gm, knoxclient, mong
 	// query mongodb to get all the images from the database
 	router.get('/getimages', function(req, res, next) {
 		// query the mongodb to get all the images, and send the result as the json response
-		singleImageModel.find({}, function(err, result) {
+		// to sort images according to the number of votes
+		singleImageModel.find({}, null, {sort: {votes: -1}},  function(err, result) {
 			// result contains all the entries from the db, so turn it into json and send
 			res.send(JSON.stringify(result));
 			
 		})
+	});
+	
+	// for votup functionality
+	router.get('/voteup/:id', function(req, res, next){
+		singleImageModel.findByIdAndUpdate(req.params.id, {$inc:{votes:1}}, {new: true}, function(err, result) {
+			if(err) {
+				console.log(result);
+			}
+			res.status(200).send({votes: result.votes});
+		}); // find the record by id, and increment its votes count by 1, and also pass the updated object as result into the callback
+		
 	});
 	
 	// mount the router on the app, i.e, whenever the request comes, use router.
