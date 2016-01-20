@@ -215,3 +215,12 @@ body,html {
 	-o-transform:scale(1.05);
 	transform:scale(1.05);
 }
+
+.delete {
+	position: relative;
+    top: -13px;
+    right: 0px;
+    float: right;
+    /* width: 20px; */
+    left: 150px;
+}

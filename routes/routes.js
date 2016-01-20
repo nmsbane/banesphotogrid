@@ -111,7 +111,7 @@ module.exports = function(express, app, formidable, fs, os, gm, knoxclient, mong
 		})
 	});
 	
-	// for votup functionality
+	// for voteup functionality
 	router.get('/voteup/:id', function(req, res, next){
 		singleImageModel.findByIdAndUpdate(req.params.id, {$inc:{votes:1}}, {new: true}, function(err, result) {
 			if(err) {
@@ -119,6 +119,17 @@ module.exports = function(express, app, formidable, fs, os, gm, knoxclient, mong
 			}
 			res.status(200).send({votes: result.votes});
 		}); // find the record by id, and increment its votes count by 1, and also pass the updated object as result into the callback
+		
+	});
+	
+	// for delete functionality
+	router.get('/delete/:id', function(req, res, next){
+		singleImageModel.findByIdAndRemove(req.params.id, {}, function(err, result) {
+			if(err) {
+				console.log(result);
+			}
+			res.status(200).send({});
+		}); 
 		
 	});
 	
