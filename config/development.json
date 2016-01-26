@@ -1,6 +1,7 @@
 {
 	"host": "http://localhost:3000",
-	"S3AccessKey": "AKIAIPFAC3FXFCZP5JVA",
-	"S3SecretKey": "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",
-	"S3BucketName": "banesphotogrid"
+	"S3AccessKey": "<s3 access key>",
+	"S3SecretKey": "<s3 secret key>",
+	"S3BucketName": "banesphotogrid",
+	"dbURL": "<mongodb url for the database>"
 }

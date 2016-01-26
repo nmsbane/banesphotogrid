@@ -88,7 +88,6 @@
 				url: host + '/delete/' + that.data('photoid'), // access the data attribute photoid
 				success: function(data) {
 					// the filename of the image is deleted from the database, so rerender the page
-					console.log(data);
 					renderList();
 				}
 			})
